@@ -12,12 +12,13 @@
     
     
     <item>
-      <title>Markdown Syntax Guide</title>
-      <link>https://aforlorncat1.github.io/blog/markdown-syntax-guide/</link>
+      <title>Get better at Hacka(Data)-thons</title>
+      <link>https://aforlorncat1.github.io/blog/get-better-at-hackadata-thons/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://aforlorncat1.github.io/blog/markdown-syntax-guide/</guid>
-      <description>&lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;</description>
+      <guid>https://aforlorncat1.github.io/blog/get-better-at-hackadata-thons/</guid>
+      <description>Over the past week I participated in Hong Leong Bank&amp;rsquo;s(HLB) annual Can You Hack It 2020 Datathon, and managed a top 10 finish after pitching to a (digital) panel of C-suite and M.D. level judges. The experience was certainly eye-opening and very hard-earned, with my nearly throwing in the towel at multiple points throughout the event.
+I&amp;rsquo;d like to share a little on the event itself, the problem and my motivation towards the solution, and the lessons I&amp;rsquo;d be bringing into my next hackathon, which I hope would be useful to you, dear reader.</description>
     </item>
     
     <item>
