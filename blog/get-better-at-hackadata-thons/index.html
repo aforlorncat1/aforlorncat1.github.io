@@ -324,7 +324,7 @@ I&rsquo;d like to share a little on the event itself, the problem and my motivat
 
 <script src="https://aforlorncat1.github.io/js/collapseAuthors.js"></script>
                     November 30, 2020
-                    • 7 min read
+                    • 14 min read
                 </div>
             </div>
         </header>
@@ -373,7 +373,7 @@ I&rsquo;d like to share a little on the event itself, the problem and my motivat
 <li>As a result, Alex only receives a 75% loan when he was expecting a 90% one. Thus, he is unable to finance his property purchase and may have to abandon it altogether 😥 .</li>
 </ul>
 <p>Banks have to thread the fine line between managing risk and increasing profit. How then would a bank still attract more customers to obtain loans while still balancing its risk apetite? How would it manage potential customers like Alex, whose expectations do not line up with reality?</p>
-<p><img src="https://aforlorncat1.github.io/images/dramatic_dmity.jpg" width="100%"><i>Alex, after his 5th visit to the bank</i></p>
+<p><img src="https://aforlorncat1.github.io/images/dramatic_dmity.jpg" width="100%"><center><i>Alex, after his 5th visit to the bank</i></center></p>
 <h2 id="ideation">Ideation</h2>
 <p>Instead of a rude awakening after purchasing the property and receiving a loan rejection letter from the bank, what if we could help the customer <em>earlier</em> on in their home-ownership journey? What if they access to more context and better information whilst they were researching?</p>
 <p>My solution was a simple tool that would take in a <strong>specific address</strong> and return an <strong>estimated price range</strong> of a fair value of the target property. This estimated range is based on the <a href="https://www.redbrick.sg/blog/property-valuation-direct-comparison-approach/">Direct Comparison Approach</a> for property valuation:</p>
@@ -399,15 +399,16 @@ So how do we do it?</p>
 <li>if done correctly, the distance calculations can be done fast.</li>
 <li>high quality insights can be derived from a property&rsquo;s location: proximity to high-value amenities, e.g. train stations</li>
 </ul>
-<p>Good stuff! Let&rsquo;s geocode our addresses using Google&rsquo;s handy-dandy <a href="https://developers.google.com/maps/documentation/geocoding/start">Geocoding API</a>. To get that up and running&hellip;</p>
-<h6 id="we-need-to">We need to</h6>
+<p>Good stuff! Let&rsquo;s geocode our addresses using Google&rsquo;s handy-dandy <a href="https://developers.google.com/maps/documentation/geocoding/start">Geocoding API</a>.</p>
+<h6 id="but-first-we-need-to">But first, we need to:</h6>
 <ol>
-<li>first have an account in Google Cloud Platform and have billing set up and running (note GCP&rsquo;s generous $300 credit + $200 Maps-specific monthly credit!),</li>
+<li>have an account in Google Cloud Platform and have billing enabled (always take advantage of GCP&rsquo;s free credits!)</li>
 <li>enable the Geocoding API</li>
-<li>create our API key and restrict its usage to specific enabled APIs (Only the Geocoding API in this case)</li>
+<li>create our API key and restrict its usage to specific enabled APIs (only the Geocoding API in this case)</li>
 </ol>
-<p>Once we have that set up, we can then use this lovely <a href="https://github.com/googlemaps/google-maps-services-python">library</a>) that will serve as a Python client to access all of Google Maps APIs while writing only Python. Being the popular coding language certainly has its perks!</p>
-<p>As an example, let&rsquo;s take the first entry of the DataFrame as a sample query. The Geocoding API takes in <a href="%5Bhttps://developers.google.com/maps/documentation/geocoding/overview%5D(https://developers.google.com/maps/documentation/geocoding/overview)">optional parameters</a>, such as the administrative area which broadly refers to the entity&rsquo;s state, and its postcode.</p>
+<p>Once we have that set up, we can then use this lovely <a href="https://github.com/googlemaps/google-maps-services-python">library</a> that will serve as a Python client to access all of Google Maps APIs, meaning we have access to the API while still writing Python only. Being the popular coding language kid-on-the-block certainly has its perks!</p>
+<p>To see how this works, let&rsquo;s take the first row of the given dataset as a sample query.
+The Geocoding API takes in <a href="%5Bhttps://developers.google.com/maps/documentation/geocoding/overview%5D(https://developers.google.com/maps/documentation/geocoding/overview)">optional parameters</a>, such as the administrative area which broadly refers to the entity&rsquo;s state, and its postcode to provide additional context to the API request.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">address</span> = <span style="color:#a6e22e">mortgage_df</span>.<span style="color:#a6e22e">iloc</span>[<span style="color:#ae81ff">1</span>][<span style="color:#e6db74">&#39;Property_Address&#39;</span>]
 <span style="color:#a6e22e">administrative_area</span> = <span style="color:#a6e22e">mortgage_df</span>.<span style="color:#a6e22e">iloc</span>[<span style="color:#ae81ff">1</span>][<span style="color:#e6db74">&#39;Cleaned_Property_State&#39;</span>]
 <span style="color:#a6e22e">postcode</span> = <span style="color:#a6e22e">mortgage_df</span>.<span style="color:#a6e22e">iloc</span>[<span style="color:#ae81ff">1</span>][<span style="color:#e6db74">&#39;Postcode&#39;</span>]
@@ -416,7 +417,8 @@ So how do we do it?</p>
 
 <span style="color:#75715e">## Geocoding an address</span>
 <span style="color:#a6e22e">geocode_result</span> = <span style="color:#a6e22e">gmaps</span>.<span style="color:#a6e22e">geocode</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">address</span>, <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#e6db74">&#39;administrative_area&#39;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">administrative_area</span>, <span style="color:#e6db74">&#39;postcode&#39;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">postcode</span><span style="color:#960050;background-color:#1e0010">})</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[{<span style="color:#960050;background-color:#1e0010">&#39;address_components&#39;:</span> <span style="color:#960050;background-color:#1e0010">[{&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Farlim&#39;,</span>
+</code></pre></div><p>The result is returned in a json like such:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[{<span style="color:#960050;background-color:#1e0010">&#39;address_components&#39;:</span> <span style="color:#960050;background-color:#1e0010">[{&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Farlim&#39;,</span>
     <span style="color:#960050;background-color:#1e0010">&#39;short_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Farlim&#39;,</span>
     <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> <span style="color:#960050;background-color:#1e0010">[&#39;political&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;sublocality&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;sublocality_level_1&#39;]</span>},
    {<span style="color:#960050;background-color:#1e0010">&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Air</span> <span style="color:#960050;background-color:#1e0010">Itam&#39;,</span>
@@ -439,141 +441,116 @@ So how do we do it?</p>
   <span style="color:#960050;background-color:#1e0010">&#39;plus_code&#39;:</span> {<span style="color:#960050;background-color:#1e0010">&#39;compound_code&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;97JJ+V4</span> <span style="color:#960050;background-color:#1e0010">Air</span> <span style="color:#960050;background-color:#1e0010">Itam,</span> <span style="color:#960050;background-color:#1e0010">Penang,</span> <span style="color:#960050;background-color:#1e0010">Malaysia&#39;,</span>
    <span style="color:#960050;background-color:#1e0010">&#39;global_code&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;6PQ297JJ+V4&#39;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
   <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> [<span style="color:#960050;background-color:#1e0010">&#39;establishment&#39;</span>, <span style="color:#960050;background-color:#1e0010">&#39;point_of_interest&#39;</span>]<span style="color:#960050;background-color:#1e0010">}]</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">location</span> = <span style="color:#a6e22e">geocode_result</span>[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;geometry&#39;</span>][<span style="color:#e6db74">&#39;location&#39;</span>]
+</code></pre></div><p>The real juicy bits that we&rsquo;re looking for are the <em>lat</em> and <em>lng</em> items under <strong>geometry</strong>. We can grab those from the json file as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">location</span> = <span style="color:#a6e22e">geocode_result</span>[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;geometry&#39;</span>][<span style="color:#e6db74">&#39;location&#39;</span>]
 <span style="color:#a6e22e">coordinates</span> = <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#a6e22e">app_no</span><span style="color:#960050;background-color:#1e0010">:</span>[<span style="color:#a6e22e">location</span>[<span style="color:#e6db74">&#39;lat&#39;</span>],<span style="color:#a6e22e">location</span>[<span style="color:#e6db74">&#39;lng&#39;</span>]]<span style="color:#960050;background-color:#1e0010">}</span>
 
+<span style="color:#75715e"># example of an entry in coordinates </span>
 <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#ae81ff">155116</span><span style="color:#960050;background-color:#1e0010">:</span> [<span style="color:#ae81ff">5.3821649</span>, <span style="color:#ae81ff">100.2802953</span>]<span style="color:#960050;background-color:#1e0010">}</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">coords_rad</span> = <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#a6e22e">x</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">np</span>.<span style="color:#a6e22e">deg2rad</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">y</span><span style="color:#960050;background-color:#1e0010">))</span> <span style="color:#a6e22e">for</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">x</span>,<span style="color:#a6e22e">y</span><span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#a6e22e">in</span> <span style="color:#a6e22e">coordinates</span>.<span style="color:#a6e22e">items</span><span style="color:#960050;background-color:#1e0010">()}</span>
-</code></pre></div><h1 id="h1">H1</h1>
-<h2 id="h2">H2</h2>
-<h3 id="h3">H3</h3>
-<h4 id="h4">H4</h4>
-<h5 id="h5">H5</h5>
-<h6 id="h6">H6</h6>
-<h2 id="paragraph">Paragraph</h2>
-<p>Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.</p>
-<p>Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sapicia is sinveli squiatum, core et que aut hariosam ex eat.</p>
-<h2 id="blockquotes">Blockquotes</h2>
-<p>The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a <code>footer</code> or <code>cite</code> element, and optionally with in-line changes such as annotations and abbreviations.</p>
-<h4 id="blockquote-without-attribution">Blockquote without attribution</h4>
-<blockquote>
-<p>Tiam, ad mint andaepu dandae nostion secatur sequo quae.
-<strong>Note</strong> that you can use <em>Markdown syntax</em> within a blockquote.</p>
-</blockquote>
-<h4 id="blockquote-with-attribution">Blockquote with attribution</h4>
-<blockquote>
-<p>Don&rsquo;t communicate by sharing memory, share memory by communicating.
-— <cite>Rob Pike<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></cite></p>
-</blockquote>
-<h2 id="tables">Tables</h2>
-<p>Tables aren&rsquo;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.</p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Bob</td>
-<td>27</td>
-</tr>
-<tr>
-<td>Alice</td>
-<td>23</td>
-</tr>
-</tbody>
-</table>
-<h4 id="inline-markdown-within-tables">Inline Markdown within tables</h4>
-<table>
-<thead>
-<tr>
-<th>Inline   </th>
-<th>Markdown   </th>
-<th>In   </th>
-<th>Table</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><em>italics</em></td>
-<td><strong>bold</strong></td>
-<td><del>strikethrough</del>   </td>
-<td><code>code</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="code-blocks">Code Blocks</h2>
-<h4 id="code-block-with-backticks">Code block with backticks</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">html
-<span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
-&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
-&lt;<span style="color:#f92672">head</span>&gt;
-  &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
-  &lt;<span style="color:#f92672">title</span>&gt;Example HTML5 Document&lt;/<span style="color:#f92672">title</span>&gt;
-&lt;/<span style="color:#f92672">head</span>&gt;
-&lt;<span style="color:#f92672">body</span>&gt;
-  &lt;<span style="color:#f92672">p</span>&gt;Test&lt;/<span style="color:#f92672">p</span>&gt;
-&lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div><h4 id="code-block-with-hugos-internal-highlight-shortcode">Code block with Hugo&rsquo;s internal highlight shortcode</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
-&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;en&#34;</span>&gt;
-&lt;<span style="color:#f92672">head</span>&gt;
-  &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;UTF-8&#34;</span>&gt;
-  &lt;<span style="color:#f92672">title</span>&gt;Example HTML5 Document&lt;/<span style="color:#f92672">title</span>&gt;
-&lt;/<span style="color:#f92672">head</span>&gt;
-&lt;<span style="color:#f92672">body</span>&gt;
-  &lt;<span style="color:#f92672">p</span>&gt;Test&lt;/<span style="color:#f92672">p</span>&gt;
-&lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;</code></pre></div>
-<h2 id="list-types">List Types</h2>
-<h4 id="ordered-list">Ordered List</h4>
-<ol>
-<li>First item</li>
-<li>Second item</li>
-<li>Third item</li>
-</ol>
-<h4 id="unordered-list">Unordered List</h4>
+</code></pre></div><p>The coordinates we got are in <strong>degrees</strong>, while our proximity search function requires the input to be in <strong>radians</strong>. Assuming that your results are stored in a dictionary, we can convert the whole lot of them with a list comprehension as such:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">coords_rad</span> = <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#a6e22e">x</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">np</span>.<span style="color:#a6e22e">deg2rad</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">y</span><span style="color:#960050;background-color:#1e0010">))</span> <span style="color:#a6e22e">for</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">x</span>,<span style="color:#a6e22e">y</span><span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#a6e22e">in</span> <span style="color:#a6e22e">coordinates</span>.<span style="color:#a6e22e">items</span><span style="color:#960050;background-color:#1e0010">()}</span>
+</code></pre></div><p>Now that we have all these coordinates handy, we can proceed to build our proximity detection model!</p>
+<h5 id="btw-it-takes-awhile">Btw, it takes awhile&hellip;</h5>
+<p>Note that at this point I did not know how to send multiple addresses a single API request&rsquo;s payload, so everything had to be done iteratively (read: <em>one-by-one</em>). Geocoding 43k addresses in this way took slightly under 5 hours, which is totally, absolutely, 100% <strong>not</strong> the way I would do it the next time.</p>
+<h3 id="lets-talk-costs">Let&rsquo;s talk costs!</h3>
+<p>Google has a progressively tiered pricing structure for geocoding, as per below. 1k requests may seem like a substantial amount, but if your database of addresses is in the millions, geocoding can quickly become very expensive. For context, we only geocoded 43k addresses and the bill still came up to be pretty gnarly.</p>
 <ul>
-<li>List item</li>
-<li>Another item</li>
-<li>And another item</li>
+<li>USD 5 / 1k requests for the first 100k requests</li>
+<li>USD 4 / 1k requests after the first 100k</li>
 </ul>
-<h4 id="nested-list">Nested list</h4>
+<p><img src="https://aforlorncat1.github.io/images/geocode_cost.png" width="100%"><center><i>Thank heavens I didn't have to pay for this</i></center></p>
+<p>However, GCP offers a fairly generous free credit plan that is adequate for this project. A combination of GCP&rsquo;s one-time $300 credit and their monthly $200 Maps API-specific credit is sufficient for a pilot of 120k geocoded addresses at absolutely 0 cost! <strong>#valuetown</strong></p>
+<h2 id="proximity-searching">Proximity-searching</h2>
+<p>Now, one would be tempted to calculate the distance between the target and every coordinate iteratively via a brute force approach, namely using .apply() or a even worse, a ginormous for loop (which is a <a href="https://stackoverflow.com/questions/54432583/when-should-i-not-want-to-use-pandas-apply-in-my-code">terrible practice</a>.)</p>
+<p>The smarter approach would be to leverage the appropriate data structures built by folks way smarter than me for our  convenience. In this case, we can use a variation of k-dimensional binary trees: the <strong>BallTree</strong> search algorithm from scikit-learn&rsquo;s neighbor module. The BallTree has a lovely <a href="https://jakevdp.github.io/blog/2013/04/29/benchmarking-nearest-neighbor-searches-in-python/">featureset</a>:</p>
 <ul>
-<li>Item</li>
+<li>it can handle most of scipy&rsquo;s spatial distance metrics, including the Haversine distance which is required for calculating radial distances.</li>
+<li>it has a time complexity of <strong>O(nlog(n))</strong>.</li>
+<li>it can handle a higher # of dimensions comapred to a basic k-d tree.</li>
+<li>the resulting data structure can be serialized using the pickle module.</li>
 </ul>
+<p>The BallTree itself is a finnicky creature. My first pass at initializing it kept killing my kernel, resulting in many hours of hair-pulling and nearly giving up altogether.</p>
+<p><img src="https://aforlorncat1.github.io/images/kernel_died.png" width="100%"><center><i>Definitely not something you wanna see</i></center></p>
+<p>Eventually, I found that the problem was due to the extremely specific input format required by BallTree, namely a <em>numpy array of <strong>arrays</strong></em> as opposed to a <em>numpy array of <strong>lists</strong></em> that I was trying to cram in. Took me a while to spot since both np.ndarray and lists are both characterized with [BRACKETS].</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># this is what you want...</span>
+<span style="color:#a6e22e">array</span><span style="color:#960050;background-color:#1e0010">(</span>[[<span style="color:#ae81ff">0.05424064</span>, <span style="color:#ae81ff">1.77111509</span>],
+       [<span style="color:#ae81ff">0.0570522</span> , <span style="color:#ae81ff">1.77415089</span>],
+       [<span style="color:#ae81ff">0.05689179</span>, <span style="color:#ae81ff">1.7743108</span> ]]<span style="color:#960050;background-color:#1e0010">)</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># ...and not this</span>
+<span style="color:#a6e22e">array</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#ae81ff">0.05424064436177897</span>, <span style="color:#ae81ff">1.771115093683815</span>]<span style="color:#960050;background-color:#1e0010">)</span>,
+       <span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#ae81ff">0.05705219874447515</span>, <span style="color:#ae81ff">1.7741508932047951</span>]<span style="color:#960050;background-color:#1e0010">)</span>,
+       <span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#ae81ff">0.05689178553292435</span>, <span style="color:#ae81ff">1.774310795034875</span>]<span style="color:#960050;background-color:#1e0010">)</span>], <span style="color:#a6e22e">dtype</span>=<span style="color:#a6e22e">object</span><span style="color:#960050;background-color:#1e0010">)</span>
+</code></pre></div><p>Save yourself the heartache and ensure proper formatting with np.stack(). Once that&rsquo;s done, create the BallTree object and select the Haversine distance metric.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">balltree_input</span> = <span style="color:#a6e22e">np</span>.<span style="color:#a6e22e">stack</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">ball_df</span>[<span style="color:#e6db74">&#39;Coords_Rad&#39;</span>].<span style="color:#a6e22e">values</span><span style="color:#960050;background-color:#1e0010">)</span>
+
+<span style="color:#a6e22e">ball</span> = <span style="color:#a6e22e">BallTree</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">balltree_input</span>, <span style="color:#a6e22e">metric</span>=<span style="color:#e6db74">&#39;haversine&#39;</span><span style="color:#960050;background-color:#1e0010">)</span>
+</code></pre></div><p>With all the groundwork set up, we can now find all locations within our pre-determined boundary!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">distance_in_km</span> = <span style="color:#ae81ff">1.5</span> <span style="color:#75715e"># the proximity radius</span>
+<span style="color:#a6e22e">earth_km</span> =  <span style="color:#ae81ff">6371</span>
+<span style="color:#a6e22e">radius</span> = <span style="color:#a6e22e">distance_in_km</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">earth_km</span> <span style="color:#75715e"># to account for the curvature of the earth in calculations</span>
+
+<span style="color:#75715e"># find k=10 closest neighbors to the target</span>
+<span style="color:#a6e22e">k_distances</span>, <span style="color:#a6e22e">k_indices</span> = <span style="color:#a6e22e">ball</span>.<span style="color:#a6e22e">query</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">query_test</span>, <span style="color:#a6e22e">k</span>=<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">)</span>
+
+<span style="color:#75715e"># find all neighbors within distance=radius from the target</span>
+<span style="color:#a6e22e">is_within</span>, <span style="color:#a6e22e">distances</span> = <span style="color:#a6e22e">ball</span>.<span style="color:#a6e22e">query_radius</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">TARGET</span>, <span style="color:#a6e22e">r</span>=<span style="color:#a6e22e">radius</span>, <span style="color:#a6e22e">count_only</span>=<span style="color:#a6e22e">False</span>, <span style="color:#a6e22e">return_distance</span>=<span style="color:#a6e22e">True</span>, <span style="color:#a6e22e">sort_results</span>=<span style="color:#a6e22e">True</span><span style="color:#960050;background-color:#1e0010">)</span>
+</code></pre></div><p>BallTree allows us to query for either a set number of nearest neighbors or all neighbors within a set boundary. <strong>is_within</strong> is an array of all indices of the locations that are within the proximity radius, which is set to 1.5km. <strong>distances</strong> is a separate array of the distance of the evaluated location to the target.</p>
+<p>Note that the unit of the returned distance is based on the unit sphere of radius=1 and will need to be converted by multiplying it by earth_km to get the final distance in kilometers.</p>
+<p>The semi-final output looks like this, with the <strong>application ID</strong> of the location and the <strong>distance from the target</strong>. From here on out it is a trivial effort to match these against the original DataFrame to pull out the relevant information for each location. A distance of 0.0 simply means that the target and the evaluated location both share the same address, i.e. both are in the same apartment complex.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">144507</span> <span style="color:#ae81ff">0.0</span>
+<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">143483</span> <span style="color:#ae81ff">0.0</span>
+<span style="color:#ae81ff">2</span> <span style="color:#ae81ff">142571</span> <span style="color:#ae81ff">0.0</span>
+<span style="color:#ae81ff">3</span> <span style="color:#ae81ff">144668</span> <span style="color:#ae81ff">0.0</span>
+</code></pre></div><h2 id="deployment">Deployment</h2>
+<p>We use a Dash, a Python framework for creating web applications on top of Flask, Plotly, and React as the mechanism to deliver our findings. A typical Dash app consists of the layout, where the design, web components e.g. tables and graphs, and other visual elements are all defined, and the &lsquo;back-end&rsquo;, where the underlying functionality  of the previously defined components are built.</p>
+<p>While they purport that one can easily convert their Python code into a <a href="https://medium.com/plotly/introducing-dash-5ecf7191b503">web app in an afternoon</a> (which I did, ultimately), the process was not without a great deal of struggle. The dual nature of Dash was unlike anything I&rsquo;ve used before, and the callback mechanisms were too much learn on the fly during the time crunch.
+Suffice to say, I&rsquo;m not terribly proud of the hacky-code-soup that this ending up becoming, but it was enough to keep the boat (barely) afloat. I won&rsquo;t pain you with the actual code itself, but offer several lessons instead:</p>
+<ul>
+<li>Use one of Dash&rsquo;s ready-made themes to save trouble on styling.</li>
+<li>Pickle and load in all requisite files.</li>
+<li>Instead of slaving all of the app&rsquo;s callbacks to a single button press, consider using <a href="https://dash.plotly.com/basic-callbacks">chained callbacks instead</a>).</li>
+</ul>
+<h3 id="app-engine-and-beyond">App Engine (and beyond!)</h3>
+<p>A key aspect of any viable prototype is that it needs to be iterated on <em>fast,</em> and to do that the prototype needs to make the leap from our local machine to an accessible instance (preferably on the cloud) where the teams on the ground and interact with it and provide feedback.</p>
+<p>Google&rsquo;s App Engine provides a reasonably fast way to deployment with minimal overhead and costs literally pennies, at least at this stage. I won&rsquo;t get into the specifics here, but the general steps are as follows:</p>
 <ol>
-<li>First Sub-item</li>
-<li>Second Sub-item</li>
+<li>Have an account on GCP with the required billing and credentials enabled.</li>
+<li>Have the gcloud CLI tool installed.</li>
+<li>Create a project on GCP.</li>
+<li>Make sure you&rsquo;re signed into the correct project in your CLI.</li>
+<li>Create a requirements.txt and app.yaml file in your app&rsquo;s folder.</li>
+<li>Type gcloud app deploy and select a region.</li>
 </ol>
-<h2 id="other-elements--abbr-sub-sup-kbd-mark">Other Elements — abbr, sub, sup, kbd, mark</h2>
-<p><abbr title="Graphics Interchange Format">GIF</abbr> is a bitmap image format.</p>
-<p>H<sub>2</sub>O</p>
-<p>X<sup>n</sup> + Y<sup>n</sup> = Z<sup>n</sup></p>
-<p>Press <kbd><kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>Delete</kbd></kbd> to end the session.</p>
-<p>Most <mark>salamanders</mark> are nocturnal, and hunt for insects, worms, and other small creatures.</p>
-<section class="footnotes" role="doc-endnotes">
+<p>Note that your app&rsquo;s script name MUST be main.py, or else AppEngine will 503 you out. If you run into any weird hiccups, dive into the History logs under Cloud Build to see why your build is failing.</p>
+<h2 id="and-finally-the-pitch">And finally, the pitch!</h2>
+<p>The top 10 finalists had the privilege of presenting to a host of C-suite level judges from Hong Leong Bank and Hong Leong Islamic, including the Group Managing Director/CEO himself! Such an august audience is really one of the great intangible benefits of participating in hackathons, as how often would you get to prepare and pitch to C-suites of a major bank? 😬
+A recurring question that was posed by the judges was:</p>
+<p><code>Did you enrich the given datasets with external data?</code></p>
+<p>The scoring scheme for the final pitch was not given to us, but it became quickly apparent that the HLB judges greatly valued the finalists&rsquo; resourcefulness and ability to think outside the box.</p>
 <hr>
-<ol>
-<li id="fn:1" role="doc-endnote">
-<p>The above quote is excerpted from Rob Pike&rsquo;s <a href="https://www.youtube.com/watch?v=PAAkCSZUG1c">talk</a> during Gopherfest, November 18, 2015. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
-</li>
-</ol>
-</section>
+<h1 id="lessons-learnt">Lessons Learnt</h1>
+<p>One does not walk away from such a valuable experience without taking away a thing or two. Incorporating these into your next hackathon may give you that decisive edge over your rivals.</p>
+<h4 id="prepare-beforehand">Prepare Beforehand</h4>
+<p><a href="https://eugeneyan.com/writing/evaluating-ideas-at-a-hackathon/">Apparently common practice</a>, hardcore teams will start their work <strong>before</strong> the event itself. While the specifics of the problem itself will only be revealed at the event, there are other methods of preparation that do not require this knowledge. Specifically, <strong>practice hackathon-useful tech</strong>. Certain techniques and frameworks such as dashboarding, visualization and cloud deployment are problem agnostic and can (and should!) be at your fingertips.</p>
+<p>Personally as a Python user, I would commit to learning <strong>Dash</strong> for creating quick web app dashboards, <strong>Plotly</strong> for visualization, and <strong>GCP App Engine</strong> or <strong>Heroku</strong> for quick demo deployments. Knowing how to utilize these beforehand will allow you more time for <em>ideation, pitching and refinement</em>, rather than building and executing.</p>
+<h4 id="use-high-impact-low-effort-visuals">Use high-impact, low-effort visuals</h4>
+<p>Identify the lowest hanging fruit in terms of visuals that will deliver maximum, head-turning impact to your audience. For example, the 2nd place winner had used the <a href="https://developers.google.com/maps/documentation/maps-static/overview">Google Static Maps API</a> to visualize the target location in his app, which caught all of the judge&rsquo;s attention. The best part? This specific API is <em>ridiculously</em> easy to implement and has the potential to pay off big. Identify similar elements for your future project!</p>
+<h4 id="show-dont-tell">Show, don&rsquo;t tell</h4>
+<p>Storytelling 101. If you have an idea or a cool feature, <em>implement it in your solution</em>. Don&rsquo;t just add a picture of it in a slide and call it a day (or as my BCG mate describes it, <strong>slides-and-spit</strong>). Likewise, if you have built an app, <em>keep your presentation in the app</em> instead of using slides!</p>
+<p>Let me digress a lil&rsquo;. With datathons, one can choose to either build a <strong>hackathon-style project</strong> as a app prototype or opt for <strong>finding insights</strong> within the data provided and back those up with  derived or imputed evidence. I&rsquo;m personally not fond of the second approach as insights are nothing more than nice words backed by fancy slides if they are not applied and pressure-tested.</p>
+<p>That being said, I&rsquo;m not completely denigrating the approach as the eventual winner took this route and ultimately provided an inconclusive analysis. However, his approach creatively combined a few of the provided datasets together and he backdropped his analysis with sound methodology and well-contextualized external data. So unless your approach has these sort of X-factor elements, I&rsquo;d recommend sticking to building stuff instead.</p>
+<h4 id="prototype-everything">Prototype everything</h4>
+<p>If you have projected the next steps of your solution, have a first pass of it built in your solution! I had the idea for a model that will use the built proximity tool to generate a range of housing prices based on similar units nearby, but it ended up as only a bullet point on a slide. <em>What I should have done</em> was to create a very rudimentary prototype of the model and baked it into my submission, even if the accuracy is super wonky. This ties in to the previous point of showing, not telling.</p>
+<h4 id="dont-ramble">Don&rsquo;t ramble</h4>
+<p>Don&rsquo;t start right away before establishing some context for your app or analysis. If the first question the judges pose to you after your presentation is &lsquo;<strong>so what&rsquo;s the point of this?</strong>&rsquo;, you know you&rsquo;ve messed up somewhere. Keep their business objectives in mind when making any technical decision made and if the solution doesn&rsquo;t contribute to it in an obvious or meaningful way, either  reframe it or drop it altogether.</p>
+<h2 id="on-to-the-next-one">On to the next one!</h2>
+<p>I wholeheartedly recommend joining a hackathon/datathon to anyone looking to expediate their learning process. In Malaysia, late Q3-Q4 seems to be the major season for these events, with Cradle, Bursa and Shopee among others all hosting their respective events in pretty rapid succession.
+I hope that this post has been informative for you, and I hope to meet you in a future event!</p>
 
     </article>
 
     
 
-
-  <ul>
-    
-      <li>
-          <a href="https://aforlorncat1.github.io/tags/example_tag_1/">example_tag_1</a>
-        </li></ul>
 
 
     
@@ -659,7 +636,7 @@ So how do we do it?</p>
         
             
                 
-                <a href="https://www.linkedin.com/company/forestry.io"><svg
+                <a href="https://www.linkedin.com/in/arnold-cheong-wk/"><svg
 class="social-icon-image"
 width="14"
 height="14"
@@ -675,7 +652,7 @@ xmlns="http://www.w3.org/2000/svg"
   fill="#73737D"
 />
 </svg></a>
-                <span class="hidden">https://www.linkedin.com/company/forestry.io</span>
+                <span class="hidden">https://www.linkedin.com/in/arnold-cheong-wk/</span>
             
         
     </div>
