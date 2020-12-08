@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="https://aforlorncat1.github.io/images/favicon.svg">
     
-    <link rel="stylesheet" href="https://aforlorncat1.github.io/scss/global.min.fb4dd79813ef5075eb6e0a596ca103e09f51efc11a614d013d4d9049d60904b1.css">
+    <link rel="stylesheet" href="https://aforlorncat1.github.io/scss/global.min.8eba9de63c890d8bda5c5d82c4f1a23d0cf1da8467ccc0ea5e37af26bf64e7cd.css">
     
     <link rel="stylesheet" href="https://aforlorncat1.github.io/css/prism.css" />
     <link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel="stylesheet">
@@ -409,47 +409,51 @@ So how do we do it?</p>
 <p>Once we have that set up, we can then use this lovely <a href="https://github.com/googlemaps/google-maps-services-python">library</a> that will serve as a Python client to access all of Google Maps APIs, meaning we have access to the API while still writing Python only. Being the popular coding language kid-on-the-block certainly has its perks!</p>
 <p>To see how this works, let&rsquo;s take the first row of the given dataset as a sample query.
 The Geocoding API takes in <a href="%5Bhttps://developers.google.com/maps/documentation/geocoding/overview%5D(https://developers.google.com/maps/documentation/geocoding/overview)">optional parameters</a>, such as the administrative area which broadly refers to the entity&rsquo;s state, and its postcode to provide additional context to the API request.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">address</span> = <span style="color:#a6e22e">mortgage_df</span>.<span style="color:#a6e22e">iloc</span>[<span style="color:#ae81ff">1</span>][<span style="color:#e6db74">&#39;Property_Address&#39;</span>]
-<span style="color:#a6e22e">administrative_area</span> = <span style="color:#a6e22e">mortgage_df</span>.<span style="color:#a6e22e">iloc</span>[<span style="color:#ae81ff">1</span>][<span style="color:#e6db74">&#39;Cleaned_Property_State&#39;</span>]
-<span style="color:#a6e22e">postcode</span> = <span style="color:#a6e22e">mortgage_df</span>.<span style="color:#a6e22e">iloc</span>[<span style="color:#ae81ff">1</span>][<span style="color:#e6db74">&#39;Postcode&#39;</span>]
+<pre><code class="language-toml">address = mortgage_df.iloc[1]['Property_Address']
+administrative_area = mortgage_df.iloc[1]['Cleaned_Property_State']
+postcode = mortgage_df.iloc[1]['Postcode']
 
-<span style="color:#a6e22e">gmaps</span> = <span style="color:#a6e22e">googlemaps</span>.<span style="color:#a6e22e">Client</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">key</span>=<span style="color:#a6e22e">YOUR_API_KEY</span><span style="color:#960050;background-color:#1e0010">)</span>
+gmaps = googlemaps.Client(key=YOUR_API_KEY)
 
-<span style="color:#75715e">## Geocoding an address</span>
-<span style="color:#a6e22e">geocode_result</span> = <span style="color:#a6e22e">gmaps</span>.<span style="color:#a6e22e">geocode</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">address</span>, <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#e6db74">&#39;administrative_area&#39;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">administrative_area</span>, <span style="color:#e6db74">&#39;postcode&#39;</span><span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#a6e22e">postcode</span><span style="color:#960050;background-color:#1e0010">})</span>
-</code></pre></div><p>The result is returned in a json like such:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[{<span style="color:#960050;background-color:#1e0010">&#39;address_components&#39;:</span> <span style="color:#960050;background-color:#1e0010">[{&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Farlim&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;short_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Farlim&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> <span style="color:#960050;background-color:#1e0010">[&#39;political&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;sublocality&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;sublocality_level_1&#39;]</span>},
-   {<span style="color:#960050;background-color:#1e0010">&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Air</span> <span style="color:#960050;background-color:#1e0010">Itam&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;short_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Air</span> <span style="color:#960050;background-color:#1e0010">Itam&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> <span style="color:#960050;background-color:#1e0010">[&#39;locality&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;political&#39;]</span>},
-   {<span style="color:#960050;background-color:#1e0010">&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Penang&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;short_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Penang&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> <span style="color:#960050;background-color:#1e0010">[&#39;administrative_area_level_1&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;political&#39;]</span>},
-   {<span style="color:#960050;background-color:#1e0010">&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Malaysia&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;short_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;MY&#39;,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> <span style="color:#960050;background-color:#1e0010">[&#39;country&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;political&#39;]</span>},
-   {<span style="color:#960050;background-color:#1e0010">&#39;long_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;11500&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;short_name&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;11500&#39;,</span> <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> <span style="color:#960050;background-color:#1e0010">[&#39;postal_code&#39;]</span>}]<span style="color:#960050;background-color:#1e0010">,</span>
-  <span style="color:#960050;background-color:#1e0010">&#39;formatted_address&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;Farlim,</span> <span style="color:#ae81ff">11500</span> <span style="color:#960050;background-color:#1e0010">Air</span> <span style="color:#960050;background-color:#1e0010">Itam,</span> <span style="color:#960050;background-color:#1e0010">Penang,</span> <span style="color:#960050;background-color:#1e0010">Malaysia&#39;,</span>
-  <span style="color:#960050;background-color:#1e0010">&#39;geometry&#39;:</span> {<span style="color:#960050;background-color:#1e0010">&#39;location&#39;:</span> <span style="color:#960050;background-color:#1e0010">{&#39;lat&#39;:</span> <span style="color:#960050;background-color:#1e0010">5.3821649,</span> <span style="color:#960050;background-color:#1e0010">&#39;lng&#39;:</span> <span style="color:#960050;background-color:#1e0010">100.2802953</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-   <span style="color:#960050;background-color:#1e0010">&#39;location_type&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;GEOMETRIC_CENTER&#39;,</span>
-   <span style="color:#960050;background-color:#1e0010">&#39;viewport&#39;:</span> {<span style="color:#960050;background-color:#1e0010">&#39;northeast&#39;:</span> <span style="color:#960050;background-color:#1e0010">{&#39;lat&#39;:</span> <span style="color:#960050;background-color:#1e0010">5.383513880291503,</span>
-     <span style="color:#960050;background-color:#1e0010">&#39;lng&#39;:</span> <span style="color:#960050;background-color:#1e0010">100.2816442802915</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-    <span style="color:#960050;background-color:#1e0010">&#39;southwest&#39;:</span> {<span style="color:#960050;background-color:#1e0010">&#39;lat&#39;:</span> <span style="color:#960050;background-color:#1e0010">5.380815919708499,</span> <span style="color:#960050;background-color:#1e0010">&#39;lng&#39;:</span> <span style="color:#960050;background-color:#1e0010">100.2789463197085</span>}<span style="color:#960050;background-color:#1e0010">}},</span>
-  <span style="color:#960050;background-color:#1e0010">&#39;place_id&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;ChIJpcIl-_LBSjAR-yCTUs</span><span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">o</span><span style="color:#ae81ff">8</span><span style="color:#960050;background-color:#1e0010">xA&#39;,</span>
-  <span style="color:#960050;background-color:#1e0010">&#39;plus_code&#39;:</span> {<span style="color:#960050;background-color:#1e0010">&#39;compound_code&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;97JJ+V4</span> <span style="color:#960050;background-color:#1e0010">Air</span> <span style="color:#960050;background-color:#1e0010">Itam,</span> <span style="color:#960050;background-color:#1e0010">Penang,</span> <span style="color:#960050;background-color:#1e0010">Malaysia&#39;,</span>
-   <span style="color:#960050;background-color:#1e0010">&#39;global_code&#39;:</span> <span style="color:#960050;background-color:#1e0010">&#39;6PQ297JJ+V4&#39;</span>}<span style="color:#960050;background-color:#1e0010">,</span>
-  <span style="color:#960050;background-color:#1e0010">&#39;types&#39;:</span> [<span style="color:#960050;background-color:#1e0010">&#39;establishment&#39;</span>, <span style="color:#960050;background-color:#1e0010">&#39;point_of_interest&#39;</span>]<span style="color:#960050;background-color:#1e0010">}]</span>
-</code></pre></div><p>The real juicy bits that we&rsquo;re looking for are the <em>lat</em> and <em>lng</em> items under <strong>geometry</strong>. We can grab those from the json file as follows:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">location</span> = <span style="color:#a6e22e">geocode_result</span>[<span style="color:#ae81ff">0</span>][<span style="color:#e6db74">&#39;geometry&#39;</span>][<span style="color:#e6db74">&#39;location&#39;</span>]
-<span style="color:#a6e22e">coordinates</span> = <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#a6e22e">app_no</span><span style="color:#960050;background-color:#1e0010">:</span>[<span style="color:#a6e22e">location</span>[<span style="color:#e6db74">&#39;lat&#39;</span>],<span style="color:#a6e22e">location</span>[<span style="color:#e6db74">&#39;lng&#39;</span>]]<span style="color:#960050;background-color:#1e0010">}</span>
+## Geocoding an address
+geocode_result = gmaps.geocode(address, {'administrative_area': administrative_area, 'postcode': postcode})
+</code></pre>
+<p>The result is returned in a json like such:</p>
+<pre><code class="language-json">[{'address_components': [{'long_name': 'Farlim',
+    'short_name': 'Farlim',
+    'types': ['political', 'sublocality', 'sublocality_level_1']},
+   {'long_name': 'Air Itam',
+    'short_name': 'Air Itam',
+    'types': ['locality', 'political']},
+   {'long_name': 'Penang',
+    'short_name': 'Penang',
+    'types': ['administrative_area_level_1', 'political']},
+   {'long_name': 'Malaysia',
+    'short_name': 'MY',
+    'types': ['country', 'political']},
+   {'long_name': '11500', 'short_name': '11500', 'types': ['postal_code']}],
+  'formatted_address': 'Farlim, 11500 Air Itam, Penang, Malaysia',
+  'geometry': {'location': {'lat': 5.3821649, 'lng': 100.2802953},
+   'location_type': 'GEOMETRIC_CENTER',
+   'viewport': {'northeast': {'lat': 5.383513880291503,
+     'lng': 100.2816442802915},
+    'southwest': {'lat': 5.380815919708499, 'lng': 100.2789463197085}}},
+  'place_id': 'ChIJpcIl-_LBSjAR-yCTUs8o8xA',
+  'plus_code': {'compound_code': '97JJ+V4 Air Itam, Penang, Malaysia',
+   'global_code': '6PQ297JJ+V4'},
+  'types': ['establishment', 'point_of_interest']}]
+</code></pre>
+<p>The real juicy bits that we&rsquo;re looking for are the <em>lat</em> and <em>lng</em> items under <strong>geometry</strong>. We can grab those from the json file as follows:</p>
+<pre><code class="language-toml">location = geocode_result[0]['geometry']['location']
+coordinates = {app_no:[location['lat'],location['lng']]}
 
-<span style="color:#75715e"># example of an entry in coordinates </span>
-<span style="color:#960050;background-color:#1e0010">{</span><span style="color:#ae81ff">155116</span><span style="color:#960050;background-color:#1e0010">:</span> [<span style="color:#ae81ff">5.3821649</span>, <span style="color:#ae81ff">100.2802953</span>]<span style="color:#960050;background-color:#1e0010">}</span>
-</code></pre></div><p>The coordinates we got are in <strong>degrees</strong>, while our proximity search function requires the input to be in <strong>radians</strong>. Assuming that your results are stored in a dictionary, we can convert the whole lot of them with a list comprehension as such:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">coords_rad</span> = <span style="color:#960050;background-color:#1e0010">{</span><span style="color:#a6e22e">x</span><span style="color:#960050;background-color:#1e0010">:</span><span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">np</span>.<span style="color:#a6e22e">deg2rad</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">y</span><span style="color:#960050;background-color:#1e0010">))</span> <span style="color:#a6e22e">for</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">x</span>,<span style="color:#a6e22e">y</span><span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#a6e22e">in</span> <span style="color:#a6e22e">coordinates</span>.<span style="color:#a6e22e">items</span><span style="color:#960050;background-color:#1e0010">()}</span>
-</code></pre></div><p>Now that we have all these coordinates handy, we can proceed to build our proximity detection model!</p>
+# example of an entry in coordinates 
+{155116: [5.3821649, 100.2802953]}
+</code></pre>
+<p>The coordinates we got are in <strong>degrees</strong>, while our proximity search function requires the input to be in <strong>radians</strong>. Assuming that your results are stored in a dictionary, we can convert the whole lot of them with a list comprehension as such:</p>
+<pre><code class="language-toml">coords_rad = {x:list(np.deg2rad(y)) for (x,y) in coordinates.items()}
+</code></pre>
+<p>Now that we have all these coordinates handy, we can proceed to build our proximity detection model!</p>
 <h5 id="btw-it-takes-awhile">Btw, it takes awhile&hellip;</h5>
 <p>Note that at this point I did not know how to send multiple addresses a single API request&rsquo;s payload, so everything had to be done iteratively (read: <em>one-by-one</em>). Geocoding 43k addresses in this way took slightly under 5 hours, which is totally, absolutely, 100% <strong>not</strong> the way I would do it the next time.</p>
 <h3 id="lets-talk-costs">Let&rsquo;s talk costs!</h3>
@@ -472,36 +476,41 @@ The Geocoding API takes in <a href="%5Bhttps://developers.google.com/maps/docume
 <p>The BallTree itself is a finnicky creature. My first pass at initializing it kept killing my kernel, resulting in many hours of hair-pulling and nearly giving up altogether.</p>
 <p><img src="https://aforlorncat1.github.io/images/kernel_died.png" width="100%"><center><i>Definitely not something you wanna see</i></center></p>
 <p>Eventually, I found that the problem was due to the extremely specific input format required by BallTree, namely a <em>numpy array of <strong>arrays</strong></em> as opposed to a <em>numpy array of <strong>lists</strong></em> that I was trying to cram in. Took me a while to spot since both np.ndarray and lists are both characterized with [BRACKETS].</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># this is what you want...</span>
-<span style="color:#a6e22e">array</span><span style="color:#960050;background-color:#1e0010">(</span>[[<span style="color:#ae81ff">0.05424064</span>, <span style="color:#ae81ff">1.77111509</span>],
-       [<span style="color:#ae81ff">0.0570522</span> , <span style="color:#ae81ff">1.77415089</span>],
-       [<span style="color:#ae81ff">0.05689179</span>, <span style="color:#ae81ff">1.7743108</span> ]]<span style="color:#960050;background-color:#1e0010">)</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># ...and not this</span>
-<span style="color:#a6e22e">array</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#ae81ff">0.05424064436177897</span>, <span style="color:#ae81ff">1.771115093683815</span>]<span style="color:#960050;background-color:#1e0010">)</span>,
-       <span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#ae81ff">0.05705219874447515</span>, <span style="color:#ae81ff">1.7741508932047951</span>]<span style="color:#960050;background-color:#1e0010">)</span>,
-       <span style="color:#a6e22e">list</span><span style="color:#960050;background-color:#1e0010">(</span>[<span style="color:#ae81ff">0.05689178553292435</span>, <span style="color:#ae81ff">1.774310795034875</span>]<span style="color:#960050;background-color:#1e0010">)</span>], <span style="color:#a6e22e">dtype</span>=<span style="color:#a6e22e">object</span><span style="color:#960050;background-color:#1e0010">)</span>
-</code></pre></div><p>Save yourself the heartache and ensure proper formatting with np.stack(). Once that&rsquo;s done, create the BallTree object and select the Haversine distance metric.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">balltree_input</span> = <span style="color:#a6e22e">np</span>.<span style="color:#a6e22e">stack</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">ball_df</span>[<span style="color:#e6db74">&#39;Coords_Rad&#39;</span>].<span style="color:#a6e22e">values</span><span style="color:#960050;background-color:#1e0010">)</span>
+<pre><code class="language-toml"># this is what you want...
+array([[0.05424064, 1.77111509],
+       [0.0570522 , 1.77415089],
+       [0.05689179, 1.7743108 ]])
+</code></pre>
+<pre><code class="language-toml"># ...and not this
+array([list([0.05424064436177897, 1.771115093683815]),
+       list([0.05705219874447515, 1.7741508932047951]),
+       list([0.05689178553292435, 1.774310795034875])], dtype=object)
+</code></pre>
+<p>Save yourself the heartache and ensure proper formatting with np.stack(). Once that&rsquo;s done, create the BallTree object and select the Haversine distance metric.</p>
+<pre><code class="language-toml">balltree_input = np.stack(ball_df['Coords_Rad'].values)
 
-<span style="color:#a6e22e">ball</span> = <span style="color:#a6e22e">BallTree</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">balltree_input</span>, <span style="color:#a6e22e">metric</span>=<span style="color:#e6db74">&#39;haversine&#39;</span><span style="color:#960050;background-color:#1e0010">)</span>
-</code></pre></div><p>With all the groundwork set up, we can now find all locations within our pre-determined boundary!</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">distance_in_km</span> = <span style="color:#ae81ff">1.5</span> <span style="color:#75715e"># the proximity radius</span>
-<span style="color:#a6e22e">earth_km</span> =  <span style="color:#ae81ff">6371</span>
-<span style="color:#a6e22e">radius</span> = <span style="color:#a6e22e">distance_in_km</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">earth_km</span> <span style="color:#75715e"># to account for the curvature of the earth in calculations</span>
+ball = BallTree(balltree_input, metric='haversine')
+</code></pre>
+<p>With all the groundwork set up, we can now find all locations within our pre-determined boundary!</p>
+<pre><code class="language-toml">distance_in_km = 1.5 # the proximity radius
+earth_km =  6371
+radius = distance_in_km/earth_km # to account for the curvature of the earth in calculations
 
-<span style="color:#75715e"># find k=10 closest neighbors to the target</span>
-<span style="color:#a6e22e">k_distances</span>, <span style="color:#a6e22e">k_indices</span> = <span style="color:#a6e22e">ball</span>.<span style="color:#a6e22e">query</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">query_test</span>, <span style="color:#a6e22e">k</span>=<span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">)</span>
+# find k=10 closest neighbors to the target
+k_distances, k_indices = ball.query(query_test, k=10)
 
-<span style="color:#75715e"># find all neighbors within distance=radius from the target</span>
-<span style="color:#a6e22e">is_within</span>, <span style="color:#a6e22e">distances</span> = <span style="color:#a6e22e">ball</span>.<span style="color:#a6e22e">query_radius</span><span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">TARGET</span>, <span style="color:#a6e22e">r</span>=<span style="color:#a6e22e">radius</span>, <span style="color:#a6e22e">count_only</span>=<span style="color:#a6e22e">False</span>, <span style="color:#a6e22e">return_distance</span>=<span style="color:#a6e22e">True</span>, <span style="color:#a6e22e">sort_results</span>=<span style="color:#a6e22e">True</span><span style="color:#960050;background-color:#1e0010">)</span>
-</code></pre></div><p>BallTree allows us to query for either a set number of nearest neighbors or all neighbors within a set boundary. <strong>is_within</strong> is an array of all indices of the locations that are within the proximity radius, which is set to 1.5km. <strong>distances</strong> is a separate array of the distance of the evaluated location to the target.</p>
+# find all neighbors within distance=radius from the target
+is_within, distances = ball.query_radius(TARGET, r=radius, count_only=False, return_distance=True, sort_results=True)
+</code></pre>
+<p>BallTree allows us to query for either a set number of nearest neighbors or all neighbors within a set boundary. <strong>is_within</strong> is an array of all indices of the locations that are within the proximity radius, which is set to 1.5km. <strong>distances</strong> is a separate array of the distance of the evaluated location to the target.</p>
 <p>Note that the unit of the returned distance is based on the unit sphere of radius=1 and will need to be converted by multiplying it by earth_km to get the final distance in kilometers.</p>
 <p>The semi-final output looks like this, with the <strong>application ID</strong> of the location and the <strong>distance from the target</strong>. From here on out it is a trivial effort to match these against the original DataFrame to pull out the relevant information for each location. A distance of 0.0 simply means that the target and the evaluated location both share the same address, i.e. both are in the same apartment complex.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#ae81ff">0</span> <span style="color:#ae81ff">144507</span> <span style="color:#ae81ff">0.0</span>
-<span style="color:#ae81ff">1</span> <span style="color:#ae81ff">143483</span> <span style="color:#ae81ff">0.0</span>
-<span style="color:#ae81ff">2</span> <span style="color:#ae81ff">142571</span> <span style="color:#ae81ff">0.0</span>
-<span style="color:#ae81ff">3</span> <span style="color:#ae81ff">144668</span> <span style="color:#ae81ff">0.0</span>
-</code></pre></div><h2 id="deployment">Deployment</h2>
+<pre><code class="language-toml">0 144507 0.0
+1 143483 0.0
+2 142571 0.0
+3 144668 0.0
+</code></pre>
+<h2 id="deployment">Deployment</h2>
 <p>We use a Dash, a Python framework for creating web applications on top of Flask, Plotly, and React as the mechanism to deliver our findings. A typical Dash app consists of the layout, where the design, web components e.g. tables and graphs, and other visual elements are all defined, and the &lsquo;back-end&rsquo;, where the underlying functionality  of the previously defined components are built.</p>
 <p>While they purport that one can easily convert their Python code into a <a href="https://medium.com/plotly/introducing-dash-5ecf7191b503">web app in an afternoon</a> (which I did, ultimately), the process was not without a great deal of struggle. The dual nature of Dash was unlike anything I&rsquo;ve used before, and the callback mechanisms were too much learn on the fly during the time crunch.
 Suffice to say, I&rsquo;m not terribly proud of the hacky-code-soup that this ending up becoming, but it was enough to keep the boat (barely) afloat. I won&rsquo;t pain you with the actual code itself, but offer several lessons instead:</p>
@@ -562,13 +571,11 @@ I hope that this post has been informative for you, and I hope to meet you in a 
     
     
     
-
-
-
-
+        
     
-    
-    
+
+
+
 
 <section id="articleNext" class="section nartrow">
     <h3 class="footer-next-heading">More articles from The ArnieBarnie</h3>
@@ -576,8 +583,28 @@ I hope that this post has been informative for you, and I hope to meet you in a 
     <div class="next-articles-grid" numberOfArticles={numberOfArticles}>
         <div class="post-row">
             
-                <a href="https://aforlorncat1.github.io/blog/food-delivery-doesnt-work/" class="article-link"
+                <a href="https://aforlorncat1.github.io/blog/shopee-code-league-challenge-no.-1/" class="article-link"
                  id="article-link-bigger">
+                    <div>
+                        <div class="image-container">
+                            <img src="https://aforlorncat1.github.io/images/fake_order.jpeg" class="article-image" />
+                        </div>
+                        <div>
+                            <h2 class="article-title">
+                                Shopee Code League Challenge No. 1
+                            </h2>
+                            <p class="article-excerpt">
+                                Finding fake orders via order brushing in 3 strikes!
+                            </p>
+                            <div class="article-metadata">
+                                November 20, 2020 · 12 min read
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            
+                <a href="https://aforlorncat1.github.io/blog/food-delivery-doesnt-work/" class="article-link"
+                >
                     <div>
                         <div class="image-container">
                             <img src="https://aforlorncat1.github.io/images/del-header-blur.jpg" class="article-image" />
@@ -591,26 +618,6 @@ I hope that this post has been informative for you, and I hope to meet you in a 
                             </p>
                             <div class="article-metadata">
                                 October 20, 2020 · 13 min read
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            
-                <a href="https://aforlorncat1.github.io/blog/get-better-at-hackadata-thons/" class="article-link"
-                >
-                    <div>
-                        <div class="image-container">
-                            <img src="https://aforlorncat1.github.io/images/CYHI_banner.jpg" class="article-image" />
-                        </div>
-                        <div>
-                            <h2 class="article-title">
-                                Get better at Hacka(Data)-thons
-                            </h2>
-                            <p class="article-excerpt">
-                                Ideation, execution and key takeaways from a Top 10 finish.
-                            </p>
-                            <div class="article-metadata">
-                                November 30, 2020 · 14 min read
                             </div>
                         </div>
                     </div>
